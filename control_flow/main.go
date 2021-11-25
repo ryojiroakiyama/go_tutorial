@@ -9,13 +9,8 @@ import (
 	"time"
 )
 
-func createnumber() int {
-	return 10
-}
-
 func main() {
-
-	// if
+	testname("if")
 	{
 		if num := createnumber(); num < 0 {
 			fmt.Println(num, "if negative")
@@ -25,8 +20,7 @@ func main() {
 			fmt.Println(num, "is multiple digits")
 		}
 	}
-
-	// switch
+	testname("switch")
 	{
 		sec := time.Now().Unix()
 		rand.Seed(sec)
@@ -43,7 +37,7 @@ func main() {
 			fmt.Println(i)
 		}
 	}
-	// switch
+	testname("switch : without first statment")
 	{
 		var to_everyone = regexp.MustCompile("^Broad cast message")
 		var to_jim = regexp.MustCompile(".*Dear jim")
@@ -61,7 +55,7 @@ func main() {
 			fmt.Println("missing destination")
 		}
 	}
-	// for
+	testname("for")
 	{
 		sum := 0
 		for i := 5; i < 5; i++ {
@@ -69,15 +63,16 @@ func main() {
 		}
 		fmt.Println("sum is ", sum)
 	}
-	// for
+	testname("for : like while")
 	{
 		num := 0
 		for num == 0 {
 			num = rand.Int() % 2
 		}
 		fmt.Println(num)
+		// for {} ==  while (true) {} of Clang
 	}
-	// defer
+	testname("defer")
 	{
 		newfile, error := os.Create("learnGo.txt")
 		if error != nil {
@@ -92,4 +87,44 @@ func main() {
 		}
 		newfile.Sync()
 	}
+	testname("panic")
+	{
+		//highlow(2, 3)
+		//highlow(2, 0)
+		//fmt.Println("call to highlow finished successfully")
+	}
+	testname("recover")
+	{
+		defer func() {
+			handler := recover()
+			/*	if program panic, recover() can't return nil.
+				programmer can write here the treatment in case of panic. */
+			if handler != nil {
+				fmt.Println("main() : recover", handler)
+			}
+		}()
+
+		highlow(2, 0)
+		fmt.Println("call to highlow finished successfully")
+	}
+}
+
+func createnumber() int {
+	return 10
+}
+
+func highlow(high int, low int) {
+	fmt.Println("First of funcion : highlow(", high, ",", low, ")")
+	if high < low {
+		fmt.Println("panic!")
+		panic("highlow() : low greater than high")
+	}
+	defer fmt.Println("defer : highlow(", high, ",", low, ")")
+	fmt.Println("Last of function : highlow(", high, ",", low, ")")
+
+	highlow(high, low+1)
+}
+
+func testname(s string) {
+	fmt.Println("---------------[", s, "]")
 }
