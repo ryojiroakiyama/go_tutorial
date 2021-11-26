@@ -51,6 +51,27 @@ func main() {
 			fmt.Println("copy months:After ", copy_months)
 		}
 	}
+	testname("map without make")
+	{
+		studentsAge := map[string]int{
+			"john": 32,
+			"bob":  31,
+		}
+		studentsAge["jiro"] = 25
+		fmt.Println(studentsAge)
+	}
+	testname("map with make")
+	{
+		//var studentsAge map[string]int // error because of nil map?
+		studentsAge := make(map[string]int) // empty map can add element
+		studentsAge["john"] = 32
+		studentsAge["bob"] = 31
+		studentsAge["jiro"] = 25
+		fmt.Println(studentsAge)
+		fmt.Println("yusei's age is", studentsAge["yusei"])
+		age, exist := studentsAge["yusei"]
+		fmt.Println("yusei's age is", age, ", exist flag:", exist)
+	}
 }
 
 func testname(s string) {
