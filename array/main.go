@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 )
 
@@ -71,6 +72,94 @@ func main() {
 		fmt.Println("yusei's age is", studentsAge["yusei"])
 		age, exist := studentsAge["yusei"]
 		fmt.Println("yusei's age is", age, ", exist flag:", exist)
+		delete(studentsAge, "yusei")
+		delete(studentsAge, "jiro")
+		fmt.Println(studentsAge)
+		//	_, age	(key ignore)
+		//	name	(value ignore)
+		for name, age := range studentsAge {
+			fmt.Println(name, "\t", age)
+		}
+	}
+	testname("struct")
+	{
+		type Employee struct {
+			ID        int
+			FirstName string
+			LastName  string
+			Address   string
+		}
+
+		employee := Employee{LastName: "Doe", FirstName: "John"}
+		fmt.Println(employee)
+		var employeeCopy *Employee
+		employeeCopy = &employee
+		employeeCopy.FirstName = "David"
+		fmt.Println(employee)
+	}
+	testname("struct nest")
+	{
+		type Person struct {
+			ID        int
+			FirstName string
+			LastName  string
+			Address   string
+		}
+		type Employee struct {
+			Person
+			ManagerID int
+		}
+		type Contractor struct {
+			Person
+			CompanyID int
+		}
+
+		employee := Employee{
+			Person: Person{
+				FirstName: "John",
+			},
+		}
+		employee.LastName = "Doe"
+		fmt.Println(employee)
+	}
+	testname("struct JSON")
+	{
+		type Person struct {
+			ID        int
+			FirstName string `json:"name"`
+			LastName  string
+			Address   string `json:"address,omitempty"`
+		}
+
+		type Employee struct {
+			Person
+			ManagerID int
+		}
+
+		type Contractor struct {
+			Person
+			CompanyID int
+		}
+
+		employees := []Employee{
+			Employee{
+				Person: Person{
+					LastName: "Doe", FirstName: "John",
+				},
+			},
+			Employee{
+				Person: Person{
+					LastName: "Campbell", FirstName: "David",
+				},
+			},
+		}
+
+		data, _ := json.Marshal(employees)
+		fmt.Printf("%s\n", data)
+
+		var decoded []Employee
+		json.Unmarshal(data, &decoded)
+		fmt.Println(decoded)
 	}
 }
 
