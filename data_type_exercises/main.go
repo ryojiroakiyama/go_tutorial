@@ -18,10 +18,13 @@ func main() {
 	}
 	testname("Rome numerals")
 	{
-		var input string
-		fmt.Print("Enter Rome num: ")
-		fmt.Scanf("%d", &input)
-		fmt.Println(Convert_Rome(input))
+		/* input version */
+		//var input string
+		//fmt.Print("Enter Rome num: ")
+		//fmt.Scanf("%s", &input) // Scanln(&input)
+		//fmt.Println(Convert_Rome(input))
+		fmt.Println(Convert_Rome("MCM"))
+		fmt.Println(Convert_Rome("MCLX"))
 	}
 }
 
@@ -57,9 +60,6 @@ func Convert_Rome(input string) (number int) {
 			break
 		}
 		switch next_num := Rome[rune(input[i+1])]; {
-		case i_num == next_num:
-			number += 2 * i_num
-			i++
 		case i_num < next_num:
 			number += next_num - i_num
 			i++
@@ -72,3 +72,50 @@ func Convert_Rome(input string) (number int) {
 	}
 	return
 }
+
+/* Rome numerals another code */
+//package main
+
+//import (
+//    "fmt"
+//)
+
+//func romanToArabic(numeral string) int {
+//    romanMap := map[rune]int{
+//        'M': 1000,
+//        'D': 500,
+//        'C': 100,
+//        'L': 50,
+//        'X': 10,
+//        'V': 5,
+//        'I': 1,
+//    }
+
+//    arabicVals := make([]int, len(numeral)+1)
+
+//    for index, digit := range numeral {
+//        if val, present := romanMap[digit]; present {
+//            arabicVals[index] = val
+//        } else {
+//            fmt.Printf("Error: The roman numeral %s has a bad digit: %c\n", numeral, digit)
+//            return 0
+//        }
+//    }
+
+//    total := 0
+
+//    for index := 0; index < len(numeral); index++ {
+//        if arabicVals[index] < arabicVals[index+1] {
+//            arabicVals[index] = -arabicVals[index]
+//        }
+//        total += arabicVals[index]
+//    }
+
+//    return total
+//}
+
+//func main() {
+//    fmt.Println("MCLX is", romanToArabic("MCLX"))
+//    fmt.Println("MCMXCIX is ", romanToArabic("MCMXCIX"))
+//    fmt.Println("MCMZ is", romanToArabic("MCMZ"))
+//}
