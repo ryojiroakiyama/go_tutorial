@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/rs/zerolog"
+	//"github.com/rs/zerolog"
 	//"github.com/rs/zerolog/log"
 	"log"
 	"os"
@@ -46,11 +46,19 @@ func main() {
 		log.Print("I'm a log")
 		log.SetOutput(os.Stdout)
 	}
-	testname("external module")
-	{
-		zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
-		log.Print("I'm a log message")
-	}
+	//testname("flame work")
+	//{
+	//zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+	//log.Print("I'm a log message")
+
+	//log.Debug().
+	//Int("EmployeeID", 1001).
+	//Msg("Getting employee information")
+
+	//log.Debug().
+	//Str("Name", "John").
+	//Send()
+	//}
 }
 
 var ErrNotFound = errors.New("Employee not found!")
