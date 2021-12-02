@@ -3,7 +3,10 @@ package main
 import (
 	"errors"
 	"fmt"
-	//"os"
+	"github.com/rs/zerolog"
+	//"github.com/rs/zerolog/log"
+	"log"
+	"os"
 )
 
 type Employee struct {
@@ -22,8 +25,31 @@ func main() {
 		} else if err != nil {
 			fmt.Print(err)
 		} else {
-			fmt.Print(employee)
+			fmt.Println(employee)
 		}
+	}
+	testname("log")
+	{
+		log.SetPrefix("main(): ")
+		log.Print("I'm a log")
+		//log.Fatal("I'm a Fatal error log")
+		//log.Panic("I'm a Panic error log")
+	}
+	testname("log to file")
+	{
+		file, err := os.OpenFile("info.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer file.Close()
+		log.SetOutput(file)
+		log.Print("I'm a log")
+		log.SetOutput(os.Stdout)
+	}
+	testname("external module")
+	{
+		zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+		log.Print("I'm a log message")
 	}
 }
 
