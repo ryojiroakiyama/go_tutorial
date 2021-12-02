@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/myuser/geometry"
 	"strings"
 )
 
@@ -31,6 +32,15 @@ func (s upperstring) Upper() string {
 	return strings.ToUpper(string(s))
 }
 
+type coloredTriangle struct {
+	triangle
+	color string
+}
+
+func (t coloredTriangle) perimeter() int {
+	return t.size * 3 * 2
+}
+
 func main() {
 	testname("base method")
 	{
@@ -46,6 +56,20 @@ func main() {
 		s := upperstring("Learning Go!")
 		fmt.Println(s)
 		fmt.Println(s.Upper())
+	}
+	testname("method overload")
+	{
+		t := coloredTriangle{triangle{3}, "blue"}
+		fmt.Println("Size: ", t.size)
+		fmt.Println("Perimeter: ", t.perimeter()) // if coloredTriangle don't have perimeter(), go use triangle's perimeter() automaticaly
+		fmt.Println("Perimeter (triangle): ", t.triangle.perimeter())
+	}
+	testname("external package")
+	{
+		t := geometry.Triangle{}
+		t.SetSize(3)
+		fmt.Println("Perimeter: ", t.Perimeter())
+		t.doubleSize() // cannot refer
 	}
 }
 
