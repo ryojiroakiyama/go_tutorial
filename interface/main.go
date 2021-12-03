@@ -47,10 +47,11 @@ func printInformation(s Shape) {
 }
 
 // for stringer interface
-type Stringer interface {
-	String() string
-}
-
+/* standard interface
+** type Stringer interface {
+** 		String() string
+** }
+ */
 type Person struct {
 	Name, Country string
 }
