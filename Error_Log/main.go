@@ -33,7 +33,7 @@ func main() {
 		log.SetPrefix("main(): ")
 		log.Print("I'm a log")
 		//log.Fatal("I'm a Fatal error log")
-		//log.Panic("I'm a Panic error log")1
+		//log.Panic("I'm a Panic error log")
 	}
 	testname("log to file")
 	{
@@ -74,7 +74,7 @@ func getInformation(id int) (*Employee, error) {
 	return employee, err
 }
 
-/* retry when error */
+/* code retry when error */
 //func getInformation(id int) (*Employee, error) {
 //    for tries := 0; tries < 3; tries++ {
 //        employee, err := apiCallEmployee(1000)
