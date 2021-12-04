@@ -33,7 +33,7 @@ func main() {
 		log.SetPrefix("main(): ")
 		log.Print("I'm a log")
 		//log.Fatal("I'm a Fatal error log")
-		//log.Panic("I'm a Panic error log")
+		//log.Panic("I'm a Panic error log")1
 	}
 	testname("log to file")
 	{
