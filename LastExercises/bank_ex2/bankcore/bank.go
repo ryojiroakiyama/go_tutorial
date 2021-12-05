@@ -61,12 +61,12 @@ func (a *Account) Statement() string {
 	return fmt.Sprintf("%v - %v - %v", a.Number, a.Name, a.Balance)
 }
 
-//// interface for
-//type Bank interface {
-//	Statement() string
-//}
+// interface for
+type Bank interface {
+	Statement() string
+}
 
-//// Statement function to return Bank interface's
-//func Statement(b Bank) string {
-//	return b.Statement()
-//}
+// Statement function to return Bank interface's
+func Statement(b Bank) string {
+	return b.Statement()
+}

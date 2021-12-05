@@ -3,13 +3,14 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/msft/bank"
 	"log"
 	"net/http"
 	"strconv"
+	//"strings"
+
+	"github.com/msft/bank"
 )
 
-//var accounts = map[float64]*bank.Account{}
 var accounts = map[float64]*CustomAccount{}
 
 func statement(w http.ResponseWriter, req *http.Request) {
@@ -27,8 +28,8 @@ func statement(w http.ResponseWriter, req *http.Request) {
 		if !exist {
 			fmt.Fprintf(w, "Account with number %v can't be found!", number)
 		} else {
-			//fmt.Fprintf(w, bank.Statement(account))
-			fmt.Fprintf(w, account.Statement())
+			//json.NewEncoder(w).Encode(bank.Statement(account))
+			fmt.Fprintf(w, bank.Statement(account))
 		}
 	}
 }
@@ -51,11 +52,11 @@ func deposit(w http.ResponseWriter, req *http.Request) {
 		if !exist {
 			fmt.Fprintf(w, "Account with number %v can't be found!", number)
 		} else {
-			err := account.Deposit(amount)
+			err := account.Account.Deposit(amount)
 			if err != nil {
 				fmt.Fprintf(w, "%v", err)
 			} else {
-				fmt.Fprintf(w, account.Statement())
+				fmt.Fprintf(w, account.Account.Statement())
 			}
 		}
 	}
@@ -79,11 +80,11 @@ func withdraw(w http.ResponseWriter, req *http.Request) {
 		if !exist {
 			fmt.Fprintf(w, "Account with number %v can't be found!", number)
 		} else {
-			err := account.Withdraw(amount)
+			err := account.Account.Withdraw(amount)
 			if err != nil {
 				fmt.Fprintf(w, "%v", err)
 			} else {
-				fmt.Fprintf(w, account.Statement())
+				fmt.Fprintf(w, account.Account.Statement())
 			}
 		}
 	}
@@ -111,40 +112,16 @@ func send(w http.ResponseWriter, req *http.Request) {
 		} else if remitteraccount, exist := accounts[remitternumber]; !exist {
 			fmt.Fprintf(w, "Remitter account with number %v can't be found!", remitternumber)
 		} else {
-			err := sourceaccount.Send(amount, remitteraccount)
+			err := sourceaccount.Account.Send(amount, remitteraccount.Account)
 			if err != nil {
 				fmt.Fprintf(w, "%v", err)
 			} else {
-				fmt.Fprintf(w, sourceaccount.Statement())
-				fmt.Println()
-				fmt.Fprintf(w, remitteraccount.Statement())
+				fmt.Fprintf(w, sourceaccount.Account.Statement())
+				fmt.Fprintf(w, "\n")
+				fmt.Fprintf(w, remitteraccount.Account.Statement())
 			}
 		}
 	}
-}
-
-func testnormal() {
-	accounts[1001] = &bank.Account{
-		Customer: bank.Customer{
-			Name:    "John",
-			Address: "Los Angeles, California",
-			Phone:   "(213) 555 0147",
-		},
-		Number: 1001,
-	}
-	accounts[1002] = &bank.Account{
-		Customer: bank.Customer{
-			Name:    "Ben",
-			Address: "Zushi, Kanagawa",
-			Phone:   "(222) 555 5555",
-		},
-		Number: 1002,
-	}
-	http.HandleFunc("/statement", statement)
-	http.HandleFunc("/deposit", deposit)
-	http.HandleFunc("/withdraw", withdraw)
-	http.HandleFunc("/send", send)
-	log.Fatal(http.ListenAndServe("localhost:8000", nil))
 }
 
 type CustomAccount struct {
@@ -159,8 +136,8 @@ func (c *CustomAccount) Statement() string {
 	return string(j)
 }
 
-func test_use_another_statement() {
-	c_accounts[1001] = &CustomAccount{
+func main() {
+	accounts[1001] = &CustomAccount{
 		Account: &bank.Account{
 			Customer: bank.Customer{
 				Name:    "John",
@@ -170,22 +147,19 @@ func test_use_another_statement() {
 			Number: 1001,
 		},
 	}
-	//accounts[1002] = &bank.Account{
-	//	Customer: bank.Customer{
-	//		Name:    "Ben",
-	//		Address: "Zushi, Kanagawa",
-	//		Phone:   "(222) 555 5555",
-	//	},
-	//	Number: 1002,
-	//}
+	accounts[1002] = &CustomAccount{
+		Account: &bank.Account{
+			Customer: bank.Customer{
+				Name:    "Ben",
+				Address: "Zushi, Kanagawa",
+				Phone:   "(222) 555 5555",
+			},
+			Number: 1002,
+		},
+	}
 	http.HandleFunc("/statement", statement)
 	http.HandleFunc("/deposit", deposit)
 	http.HandleFunc("/withdraw", withdraw)
-	//http.HandleFunc("/send", send)
+	http.HandleFunc("/send", send)
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
-}
-
-func main() {
-	//testnormal()
-	test_use_another_statement()
 }
