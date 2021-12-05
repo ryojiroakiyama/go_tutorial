@@ -1,11 +1,14 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	"github.com/msft/bank"
+	bank "go_tutorial/LastExercises/bankcore"
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/msft/bank"
 )
 
 var accounts = map[float64]*bank.Account{}
@@ -25,6 +28,7 @@ func statement(w http.ResponseWriter, req *http.Request) {
 		if !exist {
 			fmt.Fprintf(w, "Account with number %v can't be found!", number)
 		} else {
+			//fmt.Fprintf(w, bank.Statement(account))
 			fmt.Fprintf(w, account.Statement())
 		}
 	}
@@ -120,7 +124,7 @@ func send(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func main() {
+func testnormal() {
 	accounts[1001] = &bank.Account{
 		Customer: bank.Customer{
 			Name:    "John",
@@ -142,4 +146,44 @@ func main() {
 	http.HandleFunc("/withdraw", withdraw)
 	http.HandleFunc("/send", send)
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
+}
+
+type Custom struct {
+	bank.Account
+}
+
+func (c *Custom) Statement() string {
+	j, _ := json.Marshal(c.Account)
+	return string(j)
+}
+
+func test_use_another_statement() {
+	accounts[1001] = &Custom{
+		bank.Account{
+			Customer: bank.Customer{
+				Name:    "John",
+				Address: "Los Angeles, California",
+				Phone:   "(213) 555 0147",
+			},
+			Number: 1001,
+		},
+	}
+	//accounts[1002] = &bank.Account{
+	//	Customer: bank.Customer{
+	//		Name:    "Ben",
+	//		Address: "Zushi, Kanagawa",
+	//		Phone:   "(222) 555 5555",
+	//	},
+	//	Number: 1002,
+	//}
+	http.HandleFunc("/statement", statement)
+	http.HandleFunc("/deposit", deposit)
+	http.HandleFunc("/withdraw", withdraw)
+	//http.HandleFunc("/send", send)
+	log.Fatal(http.ListenAndServe("localhost:8000", nil))
+}
+
+func main() {
+	//testnormal()
+	test_use_another_statement()
 }
